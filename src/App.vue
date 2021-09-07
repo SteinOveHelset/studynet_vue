@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 import Footer from '@/components/Footer'
 import Nav from '@/components/Nav'
 
@@ -17,6 +19,17 @@ export default {
   components: {
     Nav,
     Footer
+  },
+  beforeCreate() {
+    this.$store.commit('initializeStore')
+
+    const token = this.$store.state.user.token
+
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = "Token " + token
+    } else {
+      axios.defaults.headers.common['Authorization'] = ""
+    }
   }
 }
 </script>
