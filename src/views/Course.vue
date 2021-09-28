@@ -13,17 +13,26 @@
                         <h2>Table of contents</h2>
 
                         <ul>
-                            <li><a href="#">Introduction</a></li>
-                            <li><a href="#">Get started</a></li>
-                            <li><a href="#">Part 1</a></li>
-                            <li><a href="#">Part 2</a></li>
-                            <li><a href="#">Summary</a></li>
+                            <li
+                                v-for="lesson in lessons"
+                                v-bind:key="lesson.id"
+                            >
+                                <a @click="activeLesson = lesson">{{ lesson.title }}</a>
+                            </li>
                         </ul>
                     </div>
 
                     <div class="column is-10">
                         <template v-if="$store.state.user.isAuthenticated">
-                            {{ course.long_description }}
+                            <template v-if="activeLesson">
+                                <h2>{{ activeLesson.title }}</h2>
+                                
+                                {{ activeLesson.long_description }}
+                            </template>
+
+                            <template v-else>
+                                {{ course.long_description }}
+                            </template>
                         </template>
 
                         <template v-else>
@@ -44,7 +53,9 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            course: []
+            course: {},
+            lessons: [],
+            activeLesson: null
         }
     },
     mounted() {
@@ -57,7 +68,8 @@ export default {
             .then(response => {
                 console.log(response.data)
 
-                this.course = response.data
+                this.course = response.data.course
+                this.lessons = response.data.lessons
             })
     }
 }
