@@ -61,6 +61,14 @@
                                         </div>
                                     </div>
 
+                                    <div 
+                                        class="notification is-danger"
+                                        v-for="error in errors"
+                                        v-bind:key="error"
+                                    >
+                                        {{ error }}
+                                    </div>
+
                                     <div class="field">
                                         <div class="control">
                                             <button class="button is-link">Submit</button>
@@ -96,6 +104,7 @@ export default {
             lessons: [],
             comments: [],
             activeLesson: null,
+            errors: [],
             comment: {
                 name: '',
                 content: ''
@@ -120,17 +129,29 @@ export default {
         submitComment() {
             console.log('submitComment')
 
-            axios
-                .post(`/api/v1/courses/${this.course.slug}/${this.activeLesson.slug}/`, this.comment)
-                .then(response => {
-                    this.comment.name = ''
-                    this.comment.content = ''
+            this.errors = []
 
-                    alert('The comment was added!')
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+            if (this.comment.name === '') {
+                this.errors.push('The name must be filled out')
+            }
+
+            if (this.comment.content === '') {
+                this.errors.push('The content must be filled out')
+            }
+
+            if (!this.errors.length) {
+                axios
+                    .post(`/api/v1/courses/${this.course.slug}/${this.activeLesson.slug}/`, this.comment)
+                    .then(response => {
+                        this.comment.name = ''
+                        this.comment.content = ''
+
+                        this.comments.push(response.data)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            }
         },
         setActiveLesson(lesson) {
             this.activeLesson = lesson
