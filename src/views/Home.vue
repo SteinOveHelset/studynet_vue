@@ -81,7 +81,7 @@ export default {
       document.title = 'Welcome | StudyNet'
 
       axios
-          .get('/api/v1/courses/get_frontpage_courses/')
+          .get('courses/get_frontpage_courses/')
           .then(response => {
               console.log(response.data)
 
