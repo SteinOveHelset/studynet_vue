@@ -16,6 +16,13 @@
 import axios from 'axios'
 
 export default {
+    mounted() {
+        axios
+            .get('activites/get_active_courses/')
+            .then(response => {
+                console.log(response.data)
+            })
+    },
     methods: {
         async logout() {
             console.log('logout')
